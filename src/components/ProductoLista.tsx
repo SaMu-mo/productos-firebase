@@ -4,9 +4,10 @@ import type { Producto } from "../services/productoService";
 
 interface Props {
   recargar: number;
+  onEditar: (producto: Producto) => void;
 }
 
-export default function ProductoLista({ recargar }: Props) {
+export default function ProductoLista({ recargar, onEditar }: Props) {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [cargando, setCargando] = useState(true);
 
@@ -40,6 +41,7 @@ export default function ProductoLista({ recargar }: Props) {
               <th>Nombre</th>
               <th>Precio</th>
               <th>Stock</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -48,6 +50,9 @@ export default function ProductoLista({ recargar }: Props) {
                 <td>{p.nombre}</td>
                 <td>{p.precio}</td>
                 <td>{p.stock}</td>
+                <td>
+                  <button onClick={() => onEditar(p)}>Editar</button>
+                </td>
               </tr>
             ))}
           </tbody>

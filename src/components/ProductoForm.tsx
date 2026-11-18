@@ -1,17 +1,34 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { crearProducto } from "../services/productoService";
+import { actualizarProducto, crearProducto } from "../services/productoService";
+import type { Producto } from "../services/productoService";
 
 interface Props {
-  onGuardado: () => void;
+  productoSeleccionado: Producto | null;
+  onGuardado: (mensaje: string) => void;
+  onCancelar: () => void;
 }
 
-export default function ProductoForm({ onGuardado }: Props) {
-  const [nombre, setNombre] = useState("");
-  const [precio, setPrecio] = useState("");
-  const [stock, setStock] = useState("");
+export default function ProductoForm({
+  productoSeleccionado,
+  onGuardado,
+  onCancelar,
+}: Props) {
+  const [nombre, setNombre] = useState(productoSeleccionado?.nombre ?? "");
+  const [precio, setPrecio] = useState(
+    productoSeleccionado ? String(productoSeleccionado.precio) : ""
+  );
+  const [stock, setStock] = useState(
+    productoSeleccionado ? String(productoSeleccionado.stock) : ""
+  );
   const [mensaje, setMensaje] = useState("");
   const [guardando, setGuardando] = useState(false);
+
+  const limpiar = () => {
+    setNombre("");
+    setPrecio("");
+    setStock("");
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,12 +36,20 @@ export default function ProductoForm({ onGuardado }: Props) {
     setMensaje("");
 
     try {
-      await crearProducto(nombre, Number(precio), Number(stock));
-      setNombre("");
-      setPrecio("");
-      setStock("");
-      setMensaje("Producto guardado correctamente");
-      onGuardado();
+      if (productoSeleccionado) {
+        await actualizarProducto(
+          productoSeleccionado.id,
+          nombre,
+          Number(precio),
+          Number(stock)
+        );
+        limpiar();
+        onGuardado("Producto actualizado correctamente");
+      } else {
+        await crearProducto(nombre, Number(precio), Number(stock));
+        limpiar();
+        onGuardado("Producto guardado correctamente");
+      }
     } catch (error) {
       console.error(error);
       setMensaje("No se pudo guardar el producto");
@@ -33,9 +58,15 @@ export default function ProductoForm({ onGuardado }: Props) {
     }
   };
 
+  const handleCancelar = () => {
+    limpiar();
+    setMensaje("");
+    onCancelar();
+  };
+
   return (
     <form onSubmit={handleSubmit} className="form">
-      <h1>Registrar producto</h1>
+      <h1>{productoSeleccionado ? "Editar producto" : "Registrar producto"}</h1>
 
       <label>
         Nombre
@@ -71,8 +102,18 @@ export default function ProductoForm({ onGuardado }: Props) {
       </label>
 
       <button type="submit" disabled={guardando}>
-        {guardando ? "Guardando..." : "Guardar producto"}
+        {guardando
+          ? "Guardando..."
+          : productoSeleccionado
+          ? "Actualizar producto"
+          : "Guardar producto"}
       </button>
+
+      {productoSeleccionado && (
+        <button type="button" className="secundario" onClick={handleCancelar}>
+          Cancelar
+        </button>
+      )}
 
       {mensaje && <p className="mensaje">{mensaje}</p>}
     </form>
