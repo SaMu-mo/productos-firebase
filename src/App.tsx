@@ -21,6 +21,13 @@ export default function App() {
     setProductoSeleccionado(producto);
   };
 
+  const handleEliminado = (id: string) => {
+    if (productoSeleccionado?.id === id) {
+      setProductoSeleccionado(null);
+    }
+    setAviso("Producto eliminado correctamente");
+  };
+
   return (
     <div className="app">
       {aviso && <p className="aviso">{aviso}</p>}
@@ -36,6 +43,7 @@ export default function App() {
       <ProductoLista
         recargar={recargar}
         onEditar={handleEditar}
+        onEliminado={handleEliminado}
       />
     </div>
   );

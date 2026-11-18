@@ -117,3 +117,13 @@ body {
   font-size: 0.95rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+.lista .acciones {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.lista button.eliminar {
+  border-color: #dc2626;
+  color: #dc2626;
+}

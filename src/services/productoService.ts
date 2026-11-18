@@ -1,4 +1,11 @@
-import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
 
 export interface Producto {
@@ -42,4 +49,8 @@ export async function actualizarProducto(
     precio,
     stock,
   });
+}
+
+export async function eliminarProducto(id: string): Promise<void> {
+  await deleteDoc(doc(db, "productos", id));
 }

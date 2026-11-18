@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
-import { obtenerProductos } from "../services/productoService";
-import type { Producto } from "../services/productoService";
+import {
+  obtenerProductos,
+  eliminarProducto,
+  type Producto,
+} from "../services/productoService";
 
 interface Props {
   recargar: number;
   onEditar: (producto: Producto) => void;
+  onEliminado: (id: string) => void;
 }
 
-export default function ProductoLista({ recargar, onEditar }: Props) {
+export default function ProductoLista({
+  recargar,
+  onEditar,
+  onEliminado,
+}: Props) {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [cargando, setCargando] = useState(true);
 
@@ -25,6 +33,16 @@ export default function ProductoLista({ recargar, onEditar }: Props) {
     };
     cargar();
   }, [recargar]);
+
+  const handleEliminar = async (id: string) => {
+    try {
+      await eliminarProducto(id);
+      setProductos((anteriores) => anteriores.filter((p) => p.id !== id));
+      onEliminado(id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="lista">
@@ -51,7 +69,15 @@ export default function ProductoLista({ recargar, onEditar }: Props) {
                 <td>{p.precio}</td>
                 <td>{p.stock}</td>
                 <td>
-                  <button onClick={() => onEditar(p)}>Editar</button>
+                  <div className="acciones">
+                    <button onClick={() => onEditar(p)}>Editar</button>
+                    <button
+                      className="eliminar"
+                      onClick={() => handleEliminar(p.id)}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
