@@ -2,7 +2,11 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { crearProducto } from "../services/productoService";
 
-export default function ProductoForm() {
+interface Props {
+  onGuardado: () => void;
+}
+
+export default function ProductoForm({ onGuardado }: Props) {
   const [nombre, setNombre] = useState("");
   const [precio, setPrecio] = useState("");
   const [stock, setStock] = useState("");
@@ -20,6 +24,7 @@ export default function ProductoForm() {
       setPrecio("");
       setStock("");
       setMensaje("Producto guardado correctamente");
+      onGuardado();
     } catch (error) {
       console.error(error);
       setMensaje("No se pudo guardar el producto");

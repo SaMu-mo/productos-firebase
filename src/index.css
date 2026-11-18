@@ -8,8 +8,11 @@ body {
 .app {
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  box-sizing: border-box;
 }
 
 .form {
@@ -60,4 +63,29 @@ body {
 .mensaje {
   margin: 0;
   font-size: 0.9rem;
+}
+
+.lista {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  min-width: 360px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.lista h1 {
+  margin: 0 0 1rem;
+  font-size: 1.4rem;
+}
+
+.lista table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.lista th,
+.lista td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
 }
